@@ -95,7 +95,7 @@ jobs:
 
   deployment:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && {{ github.event.label.name != 'setup' }} 
+    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && github.event.label.name != 'setup'
     runs-on: ubuntu-latest
     permissions:
       contents: read
