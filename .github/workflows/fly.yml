@@ -23,8 +23,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Print pull_request event
-        run: echo "${{ toJSON(github.event) }}"
+      - uses: 8BitJonny/gh-get-current-pr@3.0.0
+        id: PR
+
+      - run: echo "Your PR number is ${{ steps.PR.outputs.number }} and its JSON is ${{ steps.PR.outputs.pr }}"
 
 
       - name: Check if the fly-client.toml and fly-server.toml files exist
