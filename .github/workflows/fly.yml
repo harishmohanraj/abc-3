@@ -27,12 +27,12 @@ jobs:
       - uses: 8BitJonny/gh-get-current-pr@3.0.0
         id: PR
       - run: |
-          echo "Your PR title is ${{ steps.PR.outputs.title }} and its JSON is ${{ steps.PR.outputs.status }}"
+          echo "Your PR title is ${{ steps.PR.outputs.pr_body }}"
 
       - name: Check if the PR is from the setup pull request
         id: is_setup_pr
         run: |
-          if [[ "${{ steps.PR.outputs.title }}" == "Add Fly.io configuration files" && "${{ steps.PR.outputs.status }}" == "closed" ]]; then
+          if [[ "${{ steps.PR.outputs.pr_body }}" == "This is an automated pull request to add the Fly.io configuration files." ]]; then
             echo "is_pr_for_setup=true" >> $GITHUB_OUTPUT
           else
             echo "is_pr_for_setup=false" >> $GITHUB_OUTPUT
