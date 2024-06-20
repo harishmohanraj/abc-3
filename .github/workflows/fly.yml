@@ -19,6 +19,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Print pull_request title
+        run: echo "${{ github.event.pull_request.title }}"
+
       - name: Check if the fly-client.toml and fly-server.toml files exist
         id: checkfiles
         run: |
