@@ -23,8 +23,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Print pull_request label
-        run: echo "${{ github.event.label.name }}"
+      - name: Print pull_request event
+        run: echo "${{ toJSON(github.event) }}"
 
 
       - name: Check if the fly-client.toml and fly-server.toml files exist
