@@ -19,15 +19,27 @@ jobs:
       packages: write
     outputs:
       is_setup: ${{ steps.checkfiles.outputs.is_setup }}
+      is_setup_pr: ${{ steps.is_setup_pr.outputs.is_pr_for_setup }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - uses: 8BitJonny/gh-get-current-pr@3.0.0
         id: PR
+      - run: |
+          echo "Your PR title is ${{ steps.PR.outputs.title }} and its JSON is ${{ steps.PR.outputs.status }}"
 
-      - run: echo "Your PR number is ${{ steps.PR.outputs.number }} and its JSON is ${{ steps.PR.outputs.pr }}"
-
+      - name: Check if the PR is from the setup pull request
+        id: is_setup_pr
+        run: |
+          if [[ "${{ steps.PR.outputs.title }}" == "Add Fly.io configuration files" && "${{ steps.PR.outputs.status }}" == "closed" ]]; then
+            echo "is_pr_for_setup=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_pr_for_setup=false" >> $GITHUB_OUTPUT
+          fi
+          echo "The value of is_pr_for_setup is:"
+          cat $GITHUB_OUTPUT
+        shell: bash
 
       - name: Check if the fly-client.toml and fly-server.toml files exist
         id: checkfiles
@@ -97,7 +109,7 @@ jobs:
 
   deployment:
     needs: check_which_job_to_run
-    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && github.event.label.name != 'setup'
+    if: needs.check_which_job_to_run.outputs.is_setup == 'false' && needs.check_which_job_to_run.outputs.is_setup_pr == 'false'
     runs-on: ubuntu-latest
     permissions:
       contents: read
